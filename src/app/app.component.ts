@@ -22,6 +22,13 @@ export class AppComponent implements OnInit{
   originalData: MatTableDataSource<Patient> = new MatTableDataSource<Patient>();
 
   ngOnInit(): void {
+
+    /*
+    Here you use a service to get the data and slice the first elements of the array according to the pageSize
+    Keeps also a copy of the original array
+    When you slice you take from the original array and you put the items to the displayedItems array which 
+    must be bound to the datasource of your template(html)
+    */
     this.service.getPatientData().then(response => {
       this.originalData.data = response;
       this.totalItems = response.length;
@@ -29,13 +36,16 @@ export class AppComponent implements OnInit{
     });
   }
 
+  /*
+  This event is called whenever you change page or page size
+   */
   onPageChange(event: any): void {
     this.pageSize = event.pageSize; // <-- Make sure this line is present
-  this.currentPageIndex = event.pageIndex;
+    this.currentPageIndex = event.pageIndex;
 
-  const startIndex = this.currentPageIndex * this.pageSize;
-  const endIndex = startIndex + this.pageSize;
-  this.displayedItems.data = this.originalData.data.slice(startIndex, endIndex);
+    const startIndex = this.currentPageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.displayedItems.data = this.originalData.data.slice(startIndex, endIndex);
   }
   
 }
